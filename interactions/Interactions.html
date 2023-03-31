@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=windows-1252"/>
+	<title></title>
+	<meta name="generator" content="LibreOffice 7.3.7.2 (Windows)"/>
+	<meta name="author" content="David Hopp"/>
+	<meta name="created" content="2023-03-25T14:06:00"/>
+	<meta name="changed" content="2023-03-27T13:17:56.144000000"/>
+	<meta name="AppVersion" content="16.0000"/>
+	<style type="text/css">
+		@page { margin: 1in }
+		td p { text-align: left; orphans: 2; widows: 2; margin-bottom: 0.1in; background: transparent; direction: ltr }
+		h1 { color: #2f5496; line-height: 108%; text-align: center; page-break-inside: avoid; orphans: 2; widows: 2; margin-bottom: 0in; background: transparent; direction: ltr }
+		h1.western { font-family: "Calibri Light", serif; font-size: 16pt }
+		p { text-align: left; orphans: 2; widows: 2; margin-bottom: 0.1in; background: transparent; direction: ltr }
+		h4 { line-height: 108%; text-align: left; orphans: 2; widows: 2; margin-top: 0.08in; margin-bottom: 0.08in; background: transparent; direction: ltr }
+		h4.western { font-family: "Liberation Sans", sans-serif; font-size: 13pt; font-style: italic }
+		h4.cjk { font-family: "Microsoft YaHei"; font-size: 13pt; font-style: italic }
+		h4.ctl { font-family: "Lucida Sans"; font-size: 13pt; font-style: italic }
+		dd { line-height: 108%; text-align: left; orphans: 2; widows: 2; margin-left: 0.39in; margin-bottom: 0.11in; background: transparent; direction: ltr }
+	</style>
+</head>
+<body lang="en-US" dir="ltr"><h1 class="western" align="center" style="line-height: 108%; page-break-inside: avoid; orphans: 2; widows: 2; margin-top: 0in; margin-bottom: 0.2in; background: transparent; page-break-after: avoid">
+<font size="5" style="font-size: 18pt"><b>Proof of Concept</b></font></h1>
+<h1 class="western" style="margin-top: 0in; margin-bottom: 0.2in"><font size="5" style="font-size: 18pt"><b>Public-facing
+Graph Visualization of </b><br/>
+<b>Drug-Drug and Drug-Food
+Interactions</b></font></h1>
+<h1 class="western" style="margin-top: 0in; margin-bottom: 0.2in"><font size="3" style="font-size: 12pt">https://github.com/cassiodorus/drugX<br/>
+davidhoppdurm@outlook.com<br/>
+March
+2023<br/>
+David Hopp, Ph.D.<br/>
+https://www.cassiodorus.com</font></h1>
+<p align="left" style="line-height: 108%; margin-left: 1in; margin-right: 1.13in; margin-bottom: 0.11in; background: transparent; page-break-before: auto; page-break-after: auto">
+<font face="Liberation Serif, serif"><font size="4" style="font-size: 14pt">This
+is intended for those already familiar with the public-facing
+drugbank.com website at
+<a href="https://go.drugbank.com/drug-interaction-checker">https://go.drugbank.com/drug-interaction-checker</a></font></font></p>
+<p align="left" style="line-height: 100%; orphans: 0; widows: 0; margin-left: 1in; margin-right: 1.13in; margin-bottom: 0in; background: transparent">
+<font face="Liberation Serif, serif"><font size="4" style="font-size: 14pt">The
+Drugbank&copy; data, as I have transformed and arranged it, is
+available at my github site, in a password protected zip file. I will
+provide the password to verified DrugBank staff. The graphs shown
+below are also on my github site as publicly accessible html files,
+as is myPython code.</font></font></p>
+<h4 class="western" align="left" style="margin-left: 1in; margin-right: 1.13in; background: transparent">
+The Current Drug Interaction Page</h4>
+<p align="left" style="line-height: 108%; margin-left: 1in; margin-right: 1.13in; margin-bottom: 0.11in; background: transparent">
+<font size="4" style="font-size: 14pt">The DrugBank interaction
+checker allows a user to enter up to five drugs and responds with
+lists of interacting drug pairs, as well as singlet drug-food
+interactions. While the interaction information returned is
+extensive, I find the lists fragmentary and confusing. It is
+particularly unhelpful when interactions are not present in the
+drugbank database, since only the unspecific &ldquo;No Interactions
+Found&rdquo; message is returned if there are none at all, and no
+indication at all is returned if some interact and some do not.</font></p>
+<h4 class="western" align="left" style="margin-left: 1in; margin-right: 1.13in; background: transparent">
+A Graph Visualization Proposal</h4>
+<p align="left" style="margin-left: 1in; margin-right: 1.13in; background: transparent">
+<font face="Liberation Serif, serif"><font size="4" style="font-size: 14pt">Sometimes,
+graphs bring to mind hundreds or thousands of nodes and edges, but it
+is just as feasible to tailor these towards simplicity, or at least
+brevity. I propose to show graph visualizations that include misses
+as well as hits. However, the intrinsic abstractness might be a
+barrier to use? The bottom line is, are there significant advantages
+compared with lists?</font></font></p>
+<p align="left" style="margin-left: 1in; margin-right: 1.13in; background: transparent">
+<font face="Liberation Serif, serif"><font size="4" style="font-size: 14pt">For
+the purposes of this proof of concept, I will use chemical names, not
+brand names. Since the drug-drug interaction data is much more
+extensive than that for drug-food interactions, I will treat them
+separately. </font></font>
+</p>
+<p align="left" style="line-height: 108%; margin-left: 1in; margin-right: 1.13in; margin-bottom: 0.11in; background: transparent">
+<font face="Liberation Serif, serif"><font size="4" style="font-size: 14pt">I
+had initially planned to use Neo4j&copy; for its support of the
+Cypher query language, but everything I needed was easy to carry out
+using set operations. I instead implemented this in Python, using
+Python 3.10 from the Windows Store&copy;, pandas and dataframes,
+Pyvis (with its dependencies on networkx), and PySimpleGui. </font></font>
+</p>
+<h4 class="western" align="left" style="margin-left: 1in; margin-right: 1.13in; background: transparent">
+Additions to the Data</h4>
+<p align="left" style="line-height: 108%; margin-left: 1in; margin-right: 1.13in; margin-bottom: 0.11in; background: transparent">
+<font face="Liberation Serif, serif"><font size="4" style="font-size: 14pt">The
+excellent curation of the text databases by DrugBank provided a sound
+foundation for development. I regularized the drug-food interactions
+by arranging them in a root and stem fashion, at present with 67 root
+terms. I also added Action and Group. Here are some examples:</font></font></p>
+<dl>
+	<dl>
+		<dl>
+			<dl>
+				<dl>
+					<dl>
+						<dl>
+							<dl>
+								<dd>
+								<table width="888" cellpadding="2" cellspacing="0" style="page-break-inside: avoid">
+									<col width="104"/>
+
+									<col width="398"/>
+
+									<col width="182"/>
+
+									<col width="188"/>
+
+									<tr valign="top">
+										<td width="104" height="26" style="border: none; padding: 0in"></td>
+										<td width="398" style="border: none; padding: 0in"><p style="font-weight: normal">
+											<font face="Cascadia Mono SemiBold, monospace"><font size="3" style="font-size: 12pt">Root</font></font></p>
+										</td>
+										<td width="182" style="border: none; padding: 0in"><p style="font-weight: normal">
+											<font face="Cascadia Code SemiBold, monospace"><font size="3" style="font-size: 12pt">Action</font></font></p>
+										</td>
+										<td width="188" style="border: none; padding: 0in"><p style="font-weight: normal">
+											<font face="Cascadia Code SemiBold, monospace"><font size="3" style="font-size: 12pt">Group</font></font></p>
+										</td>
+									</tr>
+									<tr valign="top">
+										<td width="104" height="25" style="border: none; padding: 0in"></td>
+										<td width="398" style="border: none; padding: 0in"><p align="left" style="font-weight: normal; margin-right: 1.13in; background: transparent">
+											<font face="Cascadia Code Light, monospace"><font size="3" style="font-size: 12pt">Administer
+											calcium supplements</font></font></p>
+										</td>
+										<td width="182" style="border: none; padding: 0in"><p align="left" style="margin-right: 1.13in; background: transparent">
+											<font face="Liberation Serif, serif"><font size="4" style="font-size: 14pt"><font face="Cascadia Code Light, monospace"><font size="3" style="font-size: 12pt"><span style="font-weight: normal">Require</span></font></font></font></font></p>
+										</td>
+										<td width="188" style="border: none; padding: 0in"><p align="left" style="font-weight: normal; margin-right: 1.13in; background: transparent">
+											<font face="Cascadia Code Light, monospace"><font size="3" style="font-size: 12pt">Other</font></font></p>
+										</td>
+									</tr>
+									<tr valign="top">
+										<td width="104" height="25" style="border: none; padding: 0in"></td>
+										<td width="398" style="border: none; padding: 0in"><p align="left" style="font-weight: normal; margin-right: 1.13in; background: transparent">
+											<font face="Cascadia Code Light, monospace"><font size="3" style="font-size: 12pt">Administer
+											vitamin supplements</font></font></p>
+										</td>
+										<td width="182" style="border: none; padding: 0in"><p align="left" style="margin-right: 1.13in; background: transparent">
+											<font face="Liberation Serif, serif"><font size="4" style="font-size: 14pt"><font face="Cascadia Code Light, monospace"><font size="3" style="font-size: 12pt"><span style="font-weight: normal">Require</span></font></font></font></font></p>
+										</td>
+										<td width="188" style="border: none; padding: 0in"><p align="left" style="font-weight: normal; margin-right: 1.13in; background: transparent">
+											<font face="Cascadia Code Light, monospace"><font size="3" style="font-size: 12pt">Vitamins</font></font></p>
+										</td>
+									</tr>
+									<tr valign="top">
+										<td width="104" height="25" style="border: none; padding: 0in"></td>
+										<td width="398" style="border: none; padding: 0in"><p align="left" style="font-weight: normal; margin-right: 1.13in; background: transparent">
+											<font face="Cascadia Code Light, monospace"><font size="3" style="font-size: 12pt">Avoid
+											Alcohol</font></font></p>
+										</td>
+										<td width="182" style="border: none; padding: 0in"><p align="left" style="font-weight: normal; margin-right: 1.13in; background: transparent">
+											<font face="Cascadia Code Light, monospace"><font size="3" style="font-size: 12pt">Avoid</font></font></p>
+										</td>
+										<td width="188" style="border: none; padding: 0in"><p align="left" style="font-weight: normal; margin-right: 1.13in; background: transparent">
+											<font face="Cascadia Code Light, monospace"><font size="3" style="font-size: 12pt">Alcohol</font></font></p>
+										</td>
+									</tr>
+									<tr valign="top">
+										<td width="104" height="25" style="border: none; padding: 0in"></td>
+										<td width="398" style="border: none; padding: 0in"><p align="left" style="font-weight: normal; margin-right: 1.13in; background: transparent">
+											<font face="Cascadia Code Light, monospace"><font size="3" style="font-size: 12pt">Avoid
+											caffeine</font></font></p>
+										</td>
+										<td width="182" style="border: none; padding: 0in"><p align="left" style="font-weight: normal; margin-right: 1.13in; background: transparent">
+											<font face="Cascadia Code Light, monospace"><font size="3" style="font-size: 12pt">Avoid</font></font></p>
+										</td>
+										<td width="188" style="border: none; padding: 0in"><p align="left" style="font-weight: normal; margin-right: 1.13in; background: transparent">
+											<font face="Cascadia Code Light, monospace"><font size="3" style="font-size: 12pt">Caffeine</font></font></p>
+										</td>
+									</tr>
+									<tr valign="top">
+										<td width="104" height="25" style="border: none; padding: 0in"></td>
+										<td width="398" style="border: none; padding: 0in"><p align="left" style="font-weight: normal; margin-right: 1.13in; background: transparent">
+											<font face="Cascadia Code Light, monospace"><font size="3" style="font-size: 12pt">Avoid
+											solid foods</font></font></p>
+										</td>
+										<td width="182" style="border: none; padding: 0in"><p align="left" style="font-weight: normal; margin-right: 1.13in; background: transparent">
+											<font face="Cascadia Code Light, monospace"><font size="3" style="font-size: 12pt">Avoid</font></font></p>
+										</td>
+										<td width="188" style="border: none; padding: 0in"><p align="left" style="font-weight: normal; margin-right: 1.13in; background: transparent">
+											<font face="Cascadia Code Light, monospace"><font size="3" style="font-size: 12pt">Foods</font></font></p>
+										</td>
+									</tr>
+									<tr valign="top">
+										<td width="104" height="25" style="border: none; padding: 0in"></td>
+										<td width="398" style="border: none; padding: 0in">
+											<dl><dd style="font-weight: normal; text-align: left; orphans: 2; widows: 2; margin-left: 0in; background: transparent">
+												<font face="Cascadia Code Light, monospace"><font size="3" style="font-size: 12pt">Drink
+												plenty of fluids</font></font></dd></dl>
+										</td>
+										<td width="182" style="border: none; padding: 0in"><p align="left" style="margin-right: 1.13in; background: transparent">
+											<font face="Liberation Serif, serif"><font size="4" style="font-size: 14pt"><font face="Cascadia Code Light, monospace"><font size="3" style="font-size: 12pt"><span style="font-weight: normal">Require</span></font></font></font></font></p>
+										</td>
+										<td width="188" style="border: none; padding: 0in"><p align="left" style="font-weight: normal; margin-right: 1.13in; background: transparent">
+											<font face="Cascadia Code Light, monospace"><font size="3" style="font-size: 12pt">Fluids</font></font></p>
+										</td>
+									</tr>
+									<tr valign="top">
+										<td width="104" height="26" style="border: none; padding: 0in"></td>
+										<td width="398" style="border: none; padding: 0in">
+											<dl><dd style="font-weight: normal; text-align: left; orphans: 2; widows: 2; margin-left: 0in; background: transparent">
+												<font face="Cascadia Code Light, monospace"><font size="3" style="font-size: 12pt">Take
+												with or without foods</font></font></dd></dl>
+										</td>
+										<td width="182" style="border: none; padding: 0in"><p align="left" style="font-weight: normal; margin-right: 1.13in; background: transparent">
+											<font face="Cascadia Code Light, monospace"><font size="3" style="font-size: 12pt">Safe</font></font></p>
+										</td>
+										<td width="188" style="border: none; padding: 0in"><p align="left" style="font-weight: normal; margin-right: 1.13in; background: transparent">
+											<font face="Cascadia Code Light, monospace"><font size="3" style="font-size: 12pt">Foods</font></font></p>
+										</td>
+									</tr>
+								</table>
+							</dl>
+						</dl>
+					</dl>
+				</dl>
+			</dl>
+		</dl>
+	</dl>
+</dl>
+<p align="left" style="line-height: 108%; orphans: 2; widows: 2; margin-left: 1in; margin-right: 1.13in; margin-bottom: 0.11in; background: transparent">
+<font size="4" style="font-size: 14pt">Stems are added as required,
+for example as &ldquo;Administer calcium supplement. This will
+minimize the risk of bone mineral density loss.&rdquo;</font></p>
+<p align="left" style="line-height: 108%; orphans: 2; widows: 2; margin-left: 1in; margin-right: 1.13in; margin-bottom: 0.11in; background: transparent">
+<font size="4" style="font-size: 14pt">I added similar structure to
+the drug-drug interactions. First, I note that the text database
+includes reflexsive entries, such as:</font></p>
+<p align="left" style="font-weight: normal; line-height: 108%; orphans: 2; widows: 2; margin-left: 2in; margin-right: 1.13in; margin-bottom: 0.11in; background: transparent; page-break-before: auto; page-break-after: auto">
+<font face="Cascadia Code Light, monospace"><font size="3" style="font-size: 12pt">Apixaban:
+Apixaban may increase the anticoagulent activities of Lepirudin.</font></font></p>
+<p align="left" style="font-weight: normal; line-height: 108%; orphans: 2; widows: 2; margin-left: 2in; margin-right: 1.13in; margin-bottom: 0.11in; background: transparent">
+<font face="Cascadia Code Light, monospace"><font size="3" style="font-size: 12pt">Lepirudin:
+Apixaban may increase the anticoagulent activities of Lepirudin.</font></font></p>
+<p align="left" style="line-height: 108%; orphans: 2; widows: 2; margin-left: 1in; margin-right: 1.13in; margin-bottom: 0.11in; background: transparent; page-break-before: auto; page-break-after: auto">
+<font size="4" style="font-size: 14pt">Recognizing this can reduce
+the database size by about one-half. Second, I mapped these texts
+into 407 roots. The 12 most frequent of these account for about 80%
+of the interaction records; 135 each have over 100 instances; there
+is a very long tail of roots that occur at most twice. By way of
+example, the &ldquo;top four&rdquo; roots and their number of
+instances are:</font></p>
+<p align="left" style="font-weight: normal; line-height: 108%; orphans: 2; widows: 2; margin-left: 2in; margin-right: 1.13in; margin-bottom: 0.11in; background: transparent; page-break-before: auto; page-break-after: auto">
+<font face="Cascadia Code Light, monospace"><font size="3" style="font-size: 12pt">272068
+&lt;DrugA&gt; may decrease the excretion rate of &lt;DrugB&gt; which
+could result in a higher serum level</font></font></p>
+<p align="left" style="font-weight: normal; line-height: 108%; orphans: 2; widows: 2; margin-left: 2in; margin-right: 1.13in; margin-bottom: 0.11in; background: transparent">
+<font face="Cascadia Code Light, monospace"><font size="3" style="font-size: 12pt">214352
+The metabolism of &lt;DrugA&gt; can be decreased when combined with
+&lt;DrugB&gt;.</font></font></p>
+<p align="left" style="font-weight: normal; line-height: 108%; orphans: 2; widows: 2; margin-left: 2in; margin-right: 1.13in; margin-bottom: 0.11in; background: transparent">
+<font face="Cascadia Code Light, monospace"><font size="3" style="font-size: 12pt">178717
+The risk or severity of adverse effects can be increased when &lt;DrugA&gt;
+is combined with &lt;DrugB&gt;.</font></font></p>
+<p align="left" style="font-weight: normal; line-height: 108%; orphans: 2; widows: 2; margin-left: 2in; margin-right: 1.13in; margin-bottom: 0.11in; background: transparent">
+<font face="Cascadia Code Light, monospace"><font size="3" style="font-size: 12pt">108072
+The therapeutic efficacy of &lt;DrugA&gt; can be decreased when used
+in combination with &lt;DrugB&gt;.</font></font></p>
+<p align="left" style="line-height: 108%; orphans: 2; widows: 2; margin-left: 1in; margin-right: 1.19in; margin-bottom: 0.11in; background: transparent; page-break-before: auto; page-break-after: auto">
+<font size="4" style="font-size: 14pt">Finally, I added an
+organizational layer, Drug Class. These are for common health
+disorders and are intended to make the user&rsquo;s task easier.
+There are in this data 32 Classes that include 190 non-repeating
+drugs. For instance:</font></p>
+<p align="left" style="font-weight: normal; line-height: 108%; orphans: 2; widows: 2; margin-left: 2in; margin-right: 1.19in; margin-bottom: 0.11in; background: transparent; page-break-before: auto; page-break-after: auto">
+<font face="Cascadia Code Light, monospace"><font size="3" style="font-size: 12pt">Reproductive
+Hormones: estradiol, estrone, progesterone, testosterone</font></font></p>
+<p align="left" style="font-weight: normal; line-height: 108%; orphans: 2; widows: 2; margin-left: 2in; margin-right: 1.19in; margin-bottom: 0.11in; background: transparent">
+<font face="Cascadia Code Light, monospace"><font size="3" style="font-size: 12pt">Statins:
+atorvastatin, fluvastatin, lovastatin, pravastatin, rosuvastatin,
+simvastatin</font></font></p>
+<h4 class="western" align="left" style="line-height: 108%; orphans: 2; widows: 2; margin-left: 1in; margin-right: 1.13in; background: transparent; page-break-before: auto; page-break-after: auto">
+Drug-Food Interactions</h4>
+<p align="left" style="line-height: 108%; orphans: 2; widows: 2; margin-left: 1in; margin-right: 1.13in; margin-bottom: 0.11in; background: transparent">
+<font size="4" style="font-size: 14pt">The first drug-food
+interaction graph is for amlodipine, enalapril and pindolol. The
+icons can easily be replaced, and the visual arrangement of the nodes
+can be reconfigured.</font></p>
+<p align="left" style="line-height: 108%; orphans: 2; widows: 2; margin-left: 1in; margin-right: 1.13in; margin-bottom: 0.11in; background: transparent">
+<font size="4" style="font-size: 14pt">The dark blue stars indicate
+the drug nodes, all of which in this graph have food interactions.
+The grey clouds specify the Drug Class, if any, to which the drug
+belongs. Placing the cursor over an edge displays additional
+information. In this graph, all the drugs have food interactions.</font></p>
+<p align="left" style="line-height: 108%; orphans: 2; widows: 2; margin-left: 2in; margin-bottom: 0.11in; background: transparent; page-break-before: auto; page-break-after: auto">
+<a href="FoodX-Amlodipine-Enalapril-Pindolol.html" target="_blank"><font size="4" style="font-size: 14pt">Amlodipine,
+Enalapri, Pindolol</font></a></p>
+<p align="left" style="line-height: 108%; orphans: 2; widows: 2; margin-left: 1in; margin-right: 1.13in; margin-bottom: 0.11in; background: transparent; page-break-before: auto; page-break-after: auto">
+<font size="4" style="font-size: 14pt">The second example is for the
+eleven member Common Antibiotics Drug Class. The green, isolated
+stars denote drugs without food interactions. These make a positive
+statement rather than merely being missing.</font></p>
+<p align="left" style="line-height: 108%; orphans: 2; widows: 2; margin-left: 2in; margin-bottom: 0.11in; background: transparent; page-break-before: auto; page-break-after: auto">
+<a href="FoodX-Antibiotics-Common.html" target="_blank"><font size="4" style="font-size: 14pt">Common
+Antibiotics</font></a></p>
+<h4 class="western" align="left" style="orphans: 2; widows: 2; margin-left: 1in; background: transparent; page-break-before: auto; page-break-after: auto">
+Simple Drug-Drug Interactions</h4>
+<p align="left" style="orphans: 2; widows: 2; margin-left: 1in; margin-right: 1.13in; background: transparent; page-break-before: auto; page-break-after: auto">
+<font size="4" style="font-size: 14pt">The first graph is for
+amlodipine, enalapril and pindolol. It shows that amlodipine and
+enalapril interact with pindolol but not with one another.</font></p>
+<p align="left" style="orphans: 2; widows: 2; margin-left: 2in; background: transparent; page-break-before: auto; page-break-after: auto">
+<a href="DrugX-Amlodipine-Enalapril-Pindolol.html" target="_blank"><font size="4" style="font-size: 14pt">Amlodipine,
+Enalapril, Pindolol</font></a></p>
+<p align="left" style="line-height: 108%; orphans: 2; widows: 2; margin-left: 1in; margin-right: 1.13in; margin-bottom: 0.11in; background: transparent; page-break-before: auto; page-break-after: auto">
+<font size="4" style="font-size: 14pt">This graph is amlodipine with
+the eleven members of the Common Antibiotics Drug Class. The green
+stars indicate drugs that do not interact.</font></p>
+<p align="left" style="line-height: 108%; orphans: 2; widows: 2; margin-left: 2in; margin-bottom: 0.11in; background: transparent; page-break-before: auto; page-break-after: auto">
+<a href="DrugX-Amlodipine-Antibiotics-Common.html" target="_blank"><font size="4" style="font-size: 14pt">Amlodipine
+and Common Antibiotics</font></a></p>
+<p align="left" style="line-height: 108%; orphans: 2; widows: 2; margin-left: 1in; margin-right: 1.13in; margin-bottom: 0.11in; background: transparent; page-break-before: auto; page-break-after: auto">
+<font size="4" style="font-size: 14pt">This graph is for acebutolol
+and the four drugs in the ADHD Treatments Drug Class.</font></p>
+<p align="left" style="line-height: 108%; orphans: 2; widows: 2; margin-left: 2in; margin-bottom: 0.11in; background: transparent; page-break-before: auto; page-break-after: auto">
+<a href="DrugX-Acebutolol-ADHD-Treatments.html" target="_blank"><font size="4" style="font-size: 14pt">Acebutolol
+and ADHD Treatments</font></a></p>
+<h4 class="western" align="left" style="orphans: 2; widows: 2; margin-left: 1in; background: transparent; page-break-before: auto; page-break-after: auto">
+What Could Be Better</h4>
+<p align="left" style="orphans: 2; widows: 2; margin-left: 1in; margin-right: 1.13in; background: transparent; page-break-before: auto; page-break-after: auto">
+<font size="4" style="font-size: 14pt">These graph visualizations
+have required only minimal effort to produce. They could be made
+substantially better by using industrial strength visualization
+software, but for this proof of concept I wanted to use only Python
+and to keep it simple. In particular, the choice of node arrangement
+algorithms needs to be explored with the intent of being helpful to
+users.</font></p>
+<h4 class="western" align="left" style="orphans: 2; widows: 2; margin-left: 1in; background: transparent">
+<font size="4" style="font-size: 14pt">Conclusion</font></h4>
+<p align="left" style="orphans: 2; widows: 2; margin-left: 1in; margin-right: 1.13in; background: transparent">
+<font size="4" style="font-size: 14pt">I would greatly appreciate
+comments, questions and offers of collaboration. Please direct these
+to the email at the top of this page. All that I have done is
+available to be used freely as long as my original work is explicitly
+acknowledged.</font></p>
+<p align="left" style="orphans: 2; widows: 2; margin-left: 1in; margin-right: 1.13in; background: transparent">
+27 March 2023</p>
+</body>
+</html>
