@@ -5,4 +5,6 @@ I'm keeping this very simple and presuming that anyone who views this is already
 
 Initial preparation of the data was in R. I will provide those scripts if anyone is interested it. Also, I will provide data formats of the prepared files upon request. My main purpose here is to display a small number of graph visualizations.
 
+All programming for the visualization was done in Python, all of which is the python folder.
+
 I can be reached at davidhoppdurm@outlook.com
